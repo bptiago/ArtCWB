@@ -20,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        window?.rootViewController = LoginViewController() // Sua ViewController
+        window?.rootViewController = ArtesCollectionViewController() // Sua ViewController
         window?.makeKeyAndVisible()    }
 
     func sceneDidDisconnect(_ scene: UIScene) {
