@@ -70,6 +70,7 @@ class ArteDetalhesViewController: UIViewController {
         botaoCompartilhar.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         botaoCompartilhar.addTarget(self, action: #selector(compartilharObra), for: .touchUpInside)
         
+        // Adicionar views
         view.addSubview(imagemView)
         view.addSubview(tituloLabel)
         view.addSubview(artistaLabel)
@@ -78,6 +79,7 @@ class ArteDetalhesViewController: UIViewController {
         view.addSubview(descricaoLabel)
         view.addSubview(botaoCompartilhar)
         
+        // Auto layout com constraint
         NSLayoutConstraint.activate([
             imagemView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             imagemView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -111,6 +113,7 @@ class ArteDetalhesViewController: UIViewController {
     }
     
     private func configurarConteudo() {
+        // Atribuir obra recebida para os elementos da view
         imagemView.image = UIImage(named: obra.imagemNome)
         tituloLabel.text = obra.titulo
         artistaLabel.text = obra.artista

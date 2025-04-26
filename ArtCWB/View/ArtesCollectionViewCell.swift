@@ -23,7 +23,6 @@ class ArtesCollectionViewCell: UICollectionViewCell {
     }
 
     private func setupViews() {
-        // Preparar para Auto Layout
         imagem.translatesAutoresizingMaskIntoConstraints = false
         titulo.translatesAutoresizingMaskIntoConstraints = false
         artista.translatesAutoresizingMaskIntoConstraints = false
@@ -39,14 +38,14 @@ class ArtesCollectionViewCell: UICollectionViewCell {
         
         titulo.font = UIFont.boldSystemFont(ofSize: 16)
         titulo.textAlignment = .center
-        titulo.numberOfLines = 2 // Permitir até 2 linhas
+        titulo.numberOfLines = 2
         
         artista.font = UIFont.systemFont(ofSize: 14)
         artista.textAlignment = .center
         artista.textColor = .gray
-        artista.numberOfLines = 2 // Permitir até 2 linhas
+        artista.numberOfLines = 2
         
-        // Auto Layout
+        // Auto layout com constraint
         NSLayoutConstraint.activate([
             imagem.topAnchor.constraint(equalTo: contentView.topAnchor),
             imagem.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),

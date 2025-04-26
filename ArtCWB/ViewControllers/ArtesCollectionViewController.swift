@@ -38,6 +38,7 @@ class ArtesCollectionViewController: UIViewController, UICollectionViewDataSourc
     }
     
     private func setupCollectionView() {
+        // Utilização de UICollectionViewFlowLayout
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 16
@@ -54,6 +55,7 @@ class ArtesCollectionViewController: UIViewController, UICollectionViewDataSourc
 
         view.addSubview(collectionView)
 
+        // Auto layout com constraint
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -80,7 +82,7 @@ class ArtesCollectionViewController: UIViewController, UICollectionViewDataSourc
     }
 
     // MARK: - UICollectionViewDelegate
-
+    // Navegação para tela de detalhes
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let obraSelecionada = isSearching ? obrasFiltradas[indexPath.item] : obras[indexPath.item]
         let detalhesVC = ArteDetalhesViewController(obra: obraSelecionada)
@@ -96,6 +98,7 @@ class ArtesCollectionViewController: UIViewController, UICollectionViewDataSourc
         }
     }
     
+    // Célula voltar ao tamanho original
     func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
         if let cell = collectionView.cellForItem(at: indexPath) {
             UIView.animate(withDuration: 0.2) {
@@ -120,7 +123,6 @@ class ArtesCollectionViewController: UIViewController, UICollectionViewDataSourc
 }
 
 // MARK: - UISearchBarDelegate
-
 extension ArtesCollectionViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
