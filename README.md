@@ -2,9 +2,15 @@
 
 Aplicativo IOS desenvolvido com UIKit (View Code) que apresenta uma galeria interativa de obras de arte focada em artistas de Curitiba.
 
-> O projeto foi desenvolvido para a disciplina de **Mobile Development: IOS** como avaliação somativa.
+## Entregáveis
 
-Projeto realizado por: Bernardo Jakubiak, Danilo Garabetti, Henrique Grigoli e Tiago Prestes</li>
+- Código fonte completo com comentários explicativos
+- Vídeo demonstrativo: <a href="https://www.youtube.com/watch?v=O86QPp8mvsY">YouTube</a>
+
+Projeto realizado por: Bernardo Jakubiak, Danilo Garabetti, Henrique Grigoli e Tiago Prestes
+
+> Este projeto foi desenvolvido para a disciplina de **Mobile Development: IOS** como avaliação somativa.
+
 
 ## Funcionalidades
 
@@ -15,7 +21,3 @@ Projeto realizado por: Bernardo Jakubiak, Danilo Garabetti, Henrique Grigoli e T
 - Animações sutis ao tocar nas células da galeria
 - Barra de pesquisa para filtrar obras por título ou artista
 
-## Entregáveis
-
-- Código fonte completo com comentários explicativos
-- Vídeo demonstrativo: <a href="https://www.youtube.com/watch?v=O86QPp8mvsY">YouTube</a>
