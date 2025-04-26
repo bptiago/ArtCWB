@@ -7,103 +7,141 @@
 
 import UIKit
 
-private let reuseIdentifier = "Cell"
+class ArtesCollectionViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    
+    private let searchBar = UISearchBar()
+    private var obras: [ObraDeArte] = ArtesDataSource.allObras()
+    private var obrasFiltradas: [ObraDeArte] = []
+    private var isSearching = false
+    
+    private var collectionView: UICollectionView!
 
-class ArtesCollectionViewController: UICollectionViewController {
-    
-    var obras: [ObraDeArte] = ArtesDataSource.allObras()
-    
-    init() {
-            let layout = UICollectionViewFlowLayout()
-            layout.scrollDirection = .vertical
-            layout.minimumLineSpacing = 16
-            layout.minimumInteritemSpacing = 16
-            layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
-        
-            let largura = (UIScreen.main.bounds.width - 48) / 2
-            layout.itemSize = CGSize(width: largura, height: largura + 60) // <<< altura extra
-
-            super.init(collectionViewLayout: layout)
-        }
-    
-    required init?(coder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Register cell classes
-        self.collectionView!.register(ArtesCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-
-        // Do any additional setup after loading the view.
+        setupSearchBar()
+        setupCollectionView()
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
+    private func setupSearchBar() {
+        searchBar.placeholder = "Buscar por título ou artista"
+        searchBar.delegate = self
+        searchBar.sizeToFit()
+        
+        // Aparência: fundo branco, texto preto
+        searchBar.searchBarStyle = .minimal
+        searchBar.backgroundColor = .white
+        searchBar.barTintColor = .white
+        searchBar.tintColor = .black
+        searchBar.searchTextField.textColor = .black
+        
+        navigationItem.titleView = searchBar
     }
-    */
+    
+    private func setupCollectionView() {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = 16
+        layout.minimumInteritemSpacing = 16
+        layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
 
-    // MARK: UICollectionViewDataSource
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .white
 
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.register(ArtesCollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
+
+        view.addSubview(collectionView)
+
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
 
+    // MARK: - UICollectionViewDataSource
 
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return obras.count
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return isSearching ? obrasFiltradas.count : obras.count
     }
 
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? ArtesCollectionViewCell else {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as? ArtesCollectionViewCell else {
             return UICollectionViewCell()
         }
-    
-        // Configure the cell
-        let obra = obras[indexPath.item]
+        
+        let obra = isSearching ? obrasFiltradas[indexPath.item] : obras[indexPath.item]
         cell.configure(with: obra)
         
         return cell
     }
 
-    // MARK: UICollectionViewDelegate
+    // MARK: - UICollectionViewDelegate
 
-    /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let obraSelecionada = isSearching ? obrasFiltradas[indexPath.item] : obras[indexPath.item]
+        let detalhesVC = ArteDetalhesViewController(obra: obraSelecionada)
+        navigationController?.pushViewController(detalhesVC, animated: true)
     }
-    */
-
-    /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
     
+    // Animações ao tocar na célula
+    func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
+        if let cell = collectionView.cellForItem(at: indexPath) {
+            UIView.animate(withDuration: 0.2) {
+                cell.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+            }
+        }
     }
-    */
+    
+    func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
+        if let cell = collectionView.cellForItem(at: indexPath) {
+            UIView.animate(withDuration: 0.2) {
+                cell.transform = CGAffineTransform.identity
+            }
+        }
+    }
 
+    // MARK: - UICollectionViewDelegateFlowLayout
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let screenWidth = UIScreen.main.bounds.width
+        let isIpad = UIDevice.current.userInterfaceIdiom == .pad
+        
+        let itemsPerRow: CGFloat = isIpad ? 4 : 2
+        let spacing: CGFloat = 16
+        let totalSpacing = (itemsPerRow + 1) * spacing
+        let itemWidth = (screenWidth - totalSpacing) / itemsPerRow
+        
+        return CGSize(width: itemWidth, height: itemWidth + 100) // <<< altura aumentada para caber textos grandes
+    }
+}
+
+// MARK: - UISearchBarDelegate
+
+extension ArtesCollectionViewController: UISearchBarDelegate {
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty {
+            isSearching = false
+            obrasFiltradas.removeAll()
+        } else {
+            isSearching = true
+            obrasFiltradas = obras.filter {
+                $0.titulo.lowercased().contains(searchText.lowercased()) ||
+                $0.artista.lowercased().contains(searchText.lowercased())
+            }
+        }
+        collectionView.reloadData()
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        isSearching = false
+        searchBar.text = ""
+        obrasFiltradas.removeAll()
+        collectionView.reloadData()
+        searchBar.resignFirstResponder()
+    }
 }
